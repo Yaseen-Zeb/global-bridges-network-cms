@@ -1,0 +1,28 @@
+{
+  "name": "global-bridges-network-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sanity Studio v3 — Headless CMS for Global Bridges Network",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "deploy-graphql": "sanity graphql deploy",
+    "manage": "sanity manage"
+  },
+  "dependencies": {
+    "@sanity/vision": "^4.22.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^4.22.0",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
