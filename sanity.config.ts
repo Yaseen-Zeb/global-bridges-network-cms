@@ -26,6 +26,16 @@ export default defineConfig({
                   .documentId("contactInfo")
               ),
 
+            // Singleton: Founding Story
+            S.listItem()
+              .title("Founding Story")
+              .id("foundingStory")
+              .child(
+                S.document()
+                  .schemaType("foundingStory")
+                  .documentId("foundingStory")
+              ),
+
             S.divider(),
 
             // Collections
@@ -33,6 +43,8 @@ export default defineConfig({
             S.documentTypeListItem("currentNeed").title("Current Needs"),
             S.documentTypeListItem("event").title("Events"),
             S.documentTypeListItem("faq").title("FAQs"),
+            S.documentTypeListItem("serviceArea").title("What We Do"),
+            S.documentTypeListItem("teamMember").title("Founders & Leadership"),
           ]),
     }),
 

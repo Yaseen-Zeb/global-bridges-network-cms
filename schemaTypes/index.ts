@@ -9,6 +9,9 @@ import currentNeed from "./currentNeed";
 import event from "./event";
 import faq from "./faq";
 import contactInfo from "./contactInfo";
+import teamMember from "./teamMember";
+import foundingStory from "./foundingStory";
+import serviceArea from "./serviceArea";
 
 export const schemaTypes = [
   // Collections
@@ -16,6 +19,10 @@ export const schemaTypes = [
   currentNeed,
   event,
   faq,
-  // Singleton
+  teamMember,
+  serviceArea,
+  // Singletons
   contactInfo,
+  foundingStory,
 ];
+
