@@ -21,14 +21,33 @@ export default defineType({
   title: "Contact Information",
   type: "document",
   icon: () => "📬",
-  __experimental_actions: ["update", "publish"],  // prevent create/delete in UI
+
   fields: [
+    // ─── Public Contact Email (displayed on site) ───────────────────────
     defineField({
       name: "email",
       title: "Primary Email Address",
+      description: "Displayed publicly on the Contact page.",
       type: "string",
-      validation: (Rule) =>
-        Rule.required().email(),
+      validation: (Rule) => Rule.required().email(),
+    }),
+
+    // ─── Internal Recipient Emails (used by API routes) ──────────────────
+    defineField({
+      name: "contactRecipientEmail",
+      title: "Contact Form — Recipient Email",
+      type: "string",
+      description:
+        "All contact form submissions are forwarded to this address. Defaults to the primary email if left blank.",
+      validation: (Rule) => Rule.email(),
+    }),
+    defineField({
+      name: "donateGoodsRecipientEmail",
+      title: "Donate Goods Form — Recipient Email",
+      type: "string",
+      description:
+        "All goods donation offers are forwarded to this address. Defaults to the primary email if left blank.",
+      validation: (Rule) => Rule.email(),
     }),
     defineField({
       name: "phone",
