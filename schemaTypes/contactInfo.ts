@@ -50,6 +50,15 @@ export default defineType({
       validation: (Rule) => Rule.email(),
     }),
     defineField({
+      name: "donationFormUrl",
+      title: "Donation Form URL (Zeffy)",
+      type: "url",
+      description:
+        "Paste your Zeffy donation form URL here. This is embedded on the Donate page.",
+      validation: (Rule) =>
+        Rule.uri({ scheme: ["https"] }),
+    }),
+    defineField({
       name: "phone",
       title: "Phone Number",
       type: "string",
