@@ -1,8 +1,7 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 /**
- * Team Member Schema
- * Used for the "Our Founders & Leadership Team" section on the About page.
+ * Team Member — "Our Founders & Leadership Team" on the About page.
  */
 export default defineType({
   name: "teamMember",
@@ -20,31 +19,23 @@ export default defineType({
       name: "title",
       title: "Role / Title",
       type: "string",
-      description: 'E.g. "Co-Founder & Executive Director"',
+      description: 'E.g. "Co-Founder and CEO"',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "bio",
       title: "Bio",
-      type: "text",
-      rows: 4,
-      validation: (Rule) => Rule.required().min(20).max(600),
+      type: "array",
+      description: "Each item is one paragraph.",
+      of: [defineArrayMember({ type: "text", rows: 4 })],
+      validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: "photo",
       title: "Profile Photo",
       type: "image",
       options: { hotspot: true },
-    }),
-    defineField({
-      name: "email",
-      title: "Email Address",
-      type: "string",
-    }),
-    defineField({
-      name: "linkedin",
-      title: "LinkedIn Profile URL",
-      type: "url",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "order",

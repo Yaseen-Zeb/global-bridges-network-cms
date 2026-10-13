@@ -1,24 +1,15 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * Contact Info Schema — Singleton document
- * Mirrors: frontend/src/data/contact-info.ts
+ * Contact & Site Settings — Singleton document (documentId: "contactInfo").
  *
- * There is only ONE document of this type (documentId: "contactInfo").
- * Founders update org contact details here; the studio structure
- * pins it as a singleton so it cannot be duplicated.
- *
- * Fields:
- *  email           – Primary contact email address
- *  phone           – Optional phone number
- *  address         – Optional physical / mailing address
- *  mapEmbedUrl     – Optional Google Maps embed URL
- *  socialLinks     – Array of { platform, url } objects
- *  officeHours     – Human-readable hours string
+ * Used by the website footer, the Contact and Donate page panels, the Donate
+ * page Volunteer tab, the contact form's category dropdown, and the form
+ * API routes (recipient emails).
  */
 export default defineType({
   name: "contactInfo",
-  title: "Contact Information",
+  title: "Contact & Site Settings",
   type: "document",
   icon: () => "📬",
 
@@ -27,7 +18,7 @@ export default defineType({
     defineField({
       name: "email",
       title: "Primary Email Address",
-      description: "Displayed publicly on the Contact page.",
+      description: "Displayed publicly in the footer and on the Contact and Donate pages.",
       type: "string",
       validation: (Rule) => Rule.required().email(),
     }),
@@ -50,6 +41,13 @@ export default defineType({
       validation: (Rule) => Rule.email(),
     }),
     defineField({
+      name: "volunteerEmail",
+      title: "Volunteer Inquiries Email",
+      type: "string",
+      description: "Shown on the Donate page → Volunteer tab.",
+      validation: (Rule) => Rule.email(),
+    }),
+    defineField({
       name: "donationFormUrl",
       title: "Donation Form URL (Zeffy)",
       type: "url",
@@ -69,18 +67,7 @@ export default defineType({
       title: "Mailing / Office Address",
       type: "text",
       rows: 3,
-    }),
-    defineField({
-      name: "mapEmbedUrl",
-      title: "Google Maps Embed URL",
-      type: "url",
-      description: "Paste the iframe src URL from Google Maps → Share → Embed a map.",
-    }),
-    defineField({
-      name: "officeHours",
-      title: "Office Hours",
-      type: "string",
-      description: 'E.g. "Monday – Friday, 9:00 AM – 5:00 PM EST".',
+      description: "One line per row, e.g. street on the first line, city on the second.",
     }),
     defineField({
       name: "socialLinks",
@@ -119,13 +106,36 @@ export default defineType({
         },
       ],
     }),
+    defineField({
+      name: "inquiryCategories",
+      title: "Contact Form — Inquiry Categories",
+      type: "array",
+      description: "Options in the Inquiry Category dropdown on the Contact page. The first one is preselected.",
+      of: [
+        {
+          type: "object",
+          name: "inquiryCategory",
+          fields: [
+            defineField({ name: "label", title: "Label", type: "string", validation: (Rule) => Rule.required() }),
+            defineField({
+              name: "value",
+              title: "Value",
+              type: "string",
+              description: "Short id included in the email, e.g. general, volunteer.",
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: { select: { title: "label", subtitle: "value" } },
+        },
+      ],
+    }),
   ],
   preview: {
     select: {
       title: "email",
     },
     prepare({ title }) {
-      return { title: "Contact Information", subtitle: title };
+      return { title: "Contact & Site Settings", subtitle: title };
     },
   },
 });

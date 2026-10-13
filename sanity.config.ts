@@ -16,35 +16,43 @@ export default defineConfig({
         S.list()
           .title("Content")
           .items([
-            // Singleton: Contact Info
+            // Singleton: footer, contact panels, form settings
             S.listItem()
-              .title("Contact Information")
+              .title("Contact & Site Settings")
               .id("contactInfo")
-              .child(
-                S.document()
-                  .schemaType("contactInfo")
-                  .documentId("contactInfo")
-              ),
+              .icon(() => "📬")
+              .child(S.document().schemaType("contactInfo").documentId("contactInfo")),
 
-            // Singleton: Founding Story
             S.listItem()
-              .title("Founding Story")
-              .id("foundingStory")
-              .child(
-                S.document()
-                  .schemaType("foundingStory")
-                  .documentId("foundingStory")
-              ),
+              .title("Mission & Vision")
+              .id("missionVision")
+              .icon(() => "🎯")
+              .child(S.document().schemaType("missionVision").documentId("missionVision")),
+            S.listItem()
+              .title("Founders Journey")
+              .id("foundersJourney")
+              .icon(() => "🧭")
+              .child(S.document().schemaType("foundersJourney").documentId("foundersJourney")),
 
-            S.divider(),
-
-            // Collections
-            S.documentTypeListItem("testimonial").title("Testimonials"),
-            S.documentTypeListItem("currentNeed").title("Current Needs"),
-            S.documentTypeListItem("event").title("Events"),
-            S.documentTypeListItem("faq").title("FAQs"),
-            S.documentTypeListItem("serviceArea").title("What We Do"),
+            // Pages
+            S.documentTypeListItem("serviceArea").title("Services"),
+            S.documentTypeListItem("whatWeDo").title("What We Do (About page)"),
             S.documentTypeListItem("teamMember").title("Founders & Leadership"),
+            S.documentTypeListItem("coreValue").title("Core Values"),
+            S.documentTypeListItem("faq").title("FAQs"),
+            S.documentTypeListItem("goodsItem").title("Goods We Accept / Decline"),
+
+            // Legal pages: two fixed documents of the same type
+            S.listItem()
+              .title("Privacy Policy")
+              .id("privacyPolicy")
+              .icon(() => "🔒")
+              .child(S.document().schemaType("legalPage").documentId("privacyPolicy")),
+            S.listItem()
+              .title("Terms & Conditions")
+              .id("termsAndConditions")
+              .icon(() => "📜")
+              .child(S.document().schemaType("legalPage").documentId("termsAndConditions")),
           ]),
     }),
 
@@ -54,5 +62,7 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+    // Singletons / fixed documents can't be created from the "+" menu.
+    templates: (templates) => templates.filter(({ schemaType }) => !["contactInfo", "missionVision", "foundersJourney", "legalPage"].includes(schemaType)),
   },
 });

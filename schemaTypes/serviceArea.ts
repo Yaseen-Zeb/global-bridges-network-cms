@@ -1,14 +1,12 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * Service Area Schema
- * Used for the "What We Do" section on the About page.
- *
- * The icon field stores a string key that maps to a Lucide icon on the frontend.
+ * Service — listed in full on the Services page; the first four (by Display
+ * Order) also appear on the home page with a "See more" link to the Services page.
  */
 export default defineType({
   name: "serviceArea",
-  title: "Service Area",
+  title: "Service",
   type: "document",
   icon: () => "🌐",
   fields: [
@@ -26,31 +24,37 @@ export default defineType({
       validation: (Rule) => Rule.required().max(300),
     }),
     defineField({
-      name: "icon",
-      title: "Icon Key",
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt text",
+          type: "string",
+          description: "Describe the photo for screen readers.",
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "linkLabel",
+      title: "Link Label",
       type: "string",
-      description: "Pick an icon to represent this service area.",
-      options: {
-        list: [
-          { title: "👥 People / Community", value: "Users" },
-          { title: "🏢 Building / Org", value: "Building2" },
-          { title: "💊 Health / Medical", value: "HeartPulse" },
-          { title: "⚖️ Legal / Scale", value: "Scale" },
-          { title: "💼 Employment", value: "Briefcase" },
-          { title: "🎓 Education", value: "GraduationCap" },
-          { title: "🌍 Global / Women Empowerment", value: "Globe2" },
-          { title: "❤️ Heart / Compassion", value: "Heart" },
-          { title: "🤝 Handshake / Partnership", value: "HeartHandshake" },
-          { title: "📚 Book / Learning", value: "BookOpen" },
-        ],
-        layout: "dropdown",
-      },
+      description: 'Shown on the Services page, e.g. "Learn About Education".',
+    }),
+    defineField({
+      name: "linkHref",
+      title: "Link URL",
+      type: "string",
+      description: 'A page path like "/contact" or a full https:// URL.',
     }),
     defineField({
       name: "order",
       title: "Display Order",
       type: "number",
-      description: "Lower numbers appear first.",
+      description: "Lower numbers appear first. The first four also show on the home page.",
       initialValue: 99,
     }),
     defineField({
@@ -61,10 +65,7 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {
-      title: "title",
-      subtitle: "description",
-    },
+    select: { title: "title", subtitle: "description", media: "image" },
   },
   orderings: [
     {

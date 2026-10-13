@@ -1,13 +1,8 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * FAQ Schema
- * Mirrors: frontend/src/data/faqs.ts → FAQItem interface
- *
- * Fields:
- *  category  – Maps to the FAQ page tab / section
- *  question  – The question text
- *  answer    – The answer text (plain text, no rich text needed here)
+ * FAQ — shown on the FAQs page (grouped by category) and, when "Show on Home
+ * Page" is on, in the home page FAQ section.
  */
 export default defineType({
   name: "faq",
@@ -45,10 +40,17 @@ export default defineType({
       validation: (Rule) => Rule.required().min(10),
     }),
     defineField({
+      name: "showOnHome",
+      title: "Show on Home Page",
+      type: "boolean",
+      description: "Include this question in the home page FAQ section.",
+      initialValue: false,
+    }),
+    defineField({
       name: "order",
       title: "Display Order",
       type: "number",
-      description: "Lower numbers appear first within their category.",
+      description: "Lower numbers appear first (within their category, and on the home page).",
       initialValue: 99,
     }),
   ],
