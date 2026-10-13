@@ -4,32 +4,26 @@
  * Import this array in sanity.config.ts → schema.types.
  */
 
-import faq from "./faq";
 import contactInfo from "./contactInfo";
-import teamMember from "./teamMember";
-import serviceArea from "./serviceArea";
-import goodsItem from "./goodsItem";
-import coreValue from "./coreValue";
-import legalPage from "./legalPage";
-import whatWeDo from "./whatWeDo";
 import missionVision from "./missionVision";
 import foundersJourney from "./foundersJourney";
 import impactWays from "./impactWays";
 import supportWays from "./supportWays";
+import legalPage from "./legalPage";
+import { coreValuesList, faqList, goodsList, leadershipList, servicesList, whatWeDoList } from "./lists";
 
+// Every type is a fixed document pinned in the Studio menu (see sanity.config.ts).
 export const schemaTypes = [
-  // Collections
-  serviceArea,
-  whatWeDo,
-  teamMember,
-  coreValue,
-  faq,
-  goodsItem,
-  // Singletons / fixed documents
   contactInfo,
   missionVision,
   foundersJourney,
   impactWays,
   supportWays,
+  servicesList,
+  whatWeDoList,
+  leadershipList,
+  coreValuesList,
+  faqList,
+  goodsList,
   legalPage,
 ];

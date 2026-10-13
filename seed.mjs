@@ -10,8 +10,8 @@
  * identical files).
  *
  * It never touches: the contact/goods form recipient emails, the Zeffy donation
- * link. It replaces the placeholder team
- * members, the old service list (moved to "What We Do") and the founding story.
+ * link. Each list (services, team, FAQs, ...) is a single document whose items
+ * are replaced as a whole when its step runs.
  */
 
 import { createClient } from "@sanity/client";
@@ -113,10 +113,13 @@ const HOME_FAQS = [
 ];
 
 async function seedFaqs() {
-  for (const [i, faq] of HOME_FAQS.entries()) {
-    await client.createOrReplace({ _id: `faq-home-${i + 1}`, _type: "faq", ...faq, showOnHome: true, order: i + 1 });
-  }
-  console.log(`✅ ${HOME_FAQS.length} home page FAQs`);
+  // Replaces the whole FAQ list (FAQs page + home page) with the five home page questions.
+  await client.createOrReplace({
+    _id: "faqs",
+    _type: "faqList",
+    items: HOME_FAQS.map((faq, i) => ({ _key: key("faq", i), _type: "faq", ...faq, showOnHome: true })),
+  });
+  console.log(`✅ ${HOME_FAQS.length} FAQs`);
 }
 
 // ─── Leadership ───────────────────────────────────────────────────────────────
@@ -156,26 +159,19 @@ const TEAM = [
 ];
 
 async function seedTeam() {
-  // Remove the placeholder members created by the original seed.
-  const placeholders = await client.fetch(`*[_type == "teamMember" && !(_id in $keep)]._id`, {
-    keep: TEAM.map((m) => `team-${m.slug}`),
-  });
-  for (const id of placeholders) await client.delete(id);
-  if (placeholders.length) console.log(`🗑  Removed ${placeholders.length} placeholder team member(s)`);
-
+  const items = [];
   for (const [i, m] of TEAM.entries()) {
-    await client.createOrReplace({
-      _id: `team-${m.slug}`,
-      _type: "teamMember",
+    items.push({
+      _key: key("leader", i),
+      _type: "leader",
       name: m.name,
       title: m.title,
       bio: m.bio,
       photo: await image(m.photo, `Portrait of ${m.name}`),
-      order: i + 1,
-      published: true,
     });
   }
-  console.log(`✅ ${TEAM.length} team members`);
+  await client.createOrReplace({ _id: "leadership", _type: "leadershipList", items });
+  console.log(`✅ ${items.length} team members`);
 }
 
 // ─── Services & What We Do ────────────────────────────────────────────────────
@@ -251,39 +247,34 @@ const SERVICES = [
 
 
 async function seedServices() {
-  const keep = SERVICES.map((svc) => `service-${svc.slug}`);
+  const items = [];
   for (const [i, svc] of SERVICES.entries()) {
-    await client.createOrReplace({
-      _id: keep[i],
-      _type: "serviceArea",
+    items.push({
+      _key: key("service", i),
+      _type: "service",
       title: svc.title,
       description: svc.description,
       linkLabel: svc.linkLabel,
       linkHref: "/contact",
       image: await image(...svc.image),
-      order: i + 1,
-      published: true,
     });
   }
-
-  // Older service documents (the pre-redesign list) now live under "What We Do".
-  const stale = await client.fetch(`*[_type == "serviceArea" && !(_id in $keep)]._id`, { keep });
-  for (const id of stale) await client.delete(id);
-  console.log(`✅ ${SERVICES.length} services${stale.length ? ` (removed ${stale.length} old)` : ""}`);
+  await client.createOrReplace({ _id: "services", _type: "servicesList", items });
+  console.log(`✅ ${items.length} services`);
 }
 
 async function seedWhatWeDo() {
-  for (const [i, item] of WHAT_WE_DO.entries()) {
-    await client.createOrReplace({
-      _id: `what-we-do-${i + 1}`,
-      _type: "whatWeDo",
+  await client.createOrReplace({
+    _id: "whatWeDo",
+    _type: "whatWeDoList",
+    items: WHAT_WE_DO.map((item, i) => ({
+      _key: key("card", i),
+      _type: "whatWeDoCard",
       title: item.title,
       description: item.description,
       cardSize: item.cardSize ?? "default",
-      order: i + 1,
-      published: true,
-    });
-  }
+    })),
+  });
   console.log(`✅ ${WHAT_WE_DO.length} What We Do cards`);
 }
 
@@ -324,9 +315,11 @@ const CORE_VALUES = [
 ];
 
 async function seedCoreValues() {
-  for (const [i, v] of CORE_VALUES.entries()) {
-    await client.createOrReplace({ _id: `core-value-${i + 1}`, _type: "coreValue", ...v, order: i + 1 });
-  }
+  await client.createOrReplace({
+    _id: "coreValues",
+    _type: "coreValuesList",
+    items: CORE_VALUES.map((v, i) => ({ _key: key("value", i), _type: "coreValue", ...v })),
+  });
   console.log(`✅ ${CORE_VALUES.length} core values`);
 }
 
@@ -345,9 +338,11 @@ const GOODS = [
 ];
 
 async function seedGoods() {
-  for (const [i, [title, description, accepted]] of GOODS.entries()) {
-    await client.createOrReplace({ _id: `goods-item-${i + 1}`, _type: "goodsItem", title, description, accepted, order: i + 1 });
-  }
+  await client.createOrReplace({
+    _id: "goods",
+    _type: "goodsList",
+    items: GOODS.map(([title, description, accepted], i) => ({ _key: key("goods", i), _type: "goodsItem", title, description, accepted })),
+  });
   console.log(`✅ ${GOODS.length} goods items`);
 }
 
@@ -546,10 +541,6 @@ async function seedFoundersJourney() {
   await client.createOrReplace({
     _id: "foundersJourney",
     _type: "foundersJourney",
-    eyebrow: "Founders Journey",
-    title: "From Experience\nto Empowerment",
-    description:
-      "Global Bridges Network grew from lived experience and decades of service into an organization focused on helping people build safe, healthy, and self sufficient lives.",
     milestones,
   });
   console.log(`✅ Founders Journey (${milestones.length} milestones)`);
@@ -607,9 +598,6 @@ async function seedImpactWays() {
   await client.createOrReplace({
     _id: "impactWays",
     _type: "impactWays",
-    eyebrow: "Practical Support",
-    title: "Four Ways You Can\nMake an Impact",
-    description: "Choose a pathway that aligns with your capacity, skills, and community goals.",
     cards,
   });
   console.log(`✅ Four Ways (${cards.length} cards)`);
@@ -630,10 +618,6 @@ async function seedSupportWays() {
   await client.createOrReplace({
     _id: "supportWays",
     _type: "supportWays",
-    eyebrow: "Getting Started",
-    title: "Interested in\nSupporting Our Work?",
-    description:
-      "Whether you are an individual looking to mentor a family, a student group seeking community service hours, or a local business wanting to host a supply drive, we welcome your initiative.",
     cards: SUPPORT_CARDS.map(([title, description], i) => ({ _key: key("card", i), _type: "supportCard", title, description })),
   });
   console.log(`✅ Supporting Our Work (${SUPPORT_CARDS.length} cards)`);
@@ -642,10 +626,12 @@ async function seedSupportWays() {
 // ─── Retired content ──────────────────────────────────────────────────────────
 
 async function removeRetired() {
-  // The founding story was replaced by the Founders Journey on the About page.
-  const ids = await client.fetch(`*[_type == "foundingStory"]._id`);
+  // Content types replaced during the redesign (founding story; per-item documents now held in lists).
+  const ids = await client.fetch(
+    `*[_type in ["foundingStory", "serviceArea", "whatWeDo", "teamMember", "coreValue", "faq", "goodsItem"]]._id`
+  );
   for (const id of ids) await client.delete(id);
-  if (ids.length) console.log(`🗑  Removed retired founding story`);
+  if (ids.length) console.log(`🗑  Removed ${ids.length} retired document(s)`);
 }
 
 const STEPS = {

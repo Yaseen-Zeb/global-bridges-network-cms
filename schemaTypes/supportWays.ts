@@ -3,7 +3,8 @@ import { TITLE_HINT } from "./missionVision";
 
 /**
  * Supporting Our Work — singleton (documentId: "supportWays").
- * The black "Interested in Supporting Our Work?" section at the bottom of the Donate page.
+ * The cards in the black "Interested in Supporting Our Work?" section on the Donate page.
+ * Only the cards are managed here; the section heading lives in the website code.
  */
 export default defineType({
   name: "supportWays",
@@ -11,9 +12,6 @@ export default defineType({
   type: "document",
   icon: () => "🤲",
   fields: [
-    defineField({ name: "eyebrow", title: "Overline", type: "string", validation: (Rule) => Rule.required() }),
-    defineField({ name: "title", title: "Title", type: "text", rows: 2, description: TITLE_HINT, validation: (Rule) => Rule.required() }),
-    defineField({ name: "description", title: "Intro", type: "text", rows: 3 }),
     defineField({
       name: "cards",
       title: "Cards",

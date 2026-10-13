@@ -12,7 +12,8 @@ const ICONS = [
 
 /**
  * Four Ways — singleton (documentId: "impactWays").
- * The stacked photo cards ("Four Ways You Can Make an Impact") on the Donate page.
+ * The stacked photo cards in "Four Ways You Can Make an Impact" on the Donate page.
+ * Only the cards are managed here; the section heading lives in the website code.
  */
 export default defineType({
   name: "impactWays",
@@ -20,9 +21,6 @@ export default defineType({
   type: "document",
   icon: () => "🙌",
   fields: [
-    defineField({ name: "eyebrow", title: "Overline", type: "string", validation: (Rule) => Rule.required() }),
-    defineField({ name: "title", title: "Title", type: "text", rows: 2, description: TITLE_HINT, validation: (Rule) => Rule.required() }),
-    defineField({ name: "description", title: "Intro", type: "text", rows: 2 }),
     defineField({
       name: "cards",
       title: "Cards",

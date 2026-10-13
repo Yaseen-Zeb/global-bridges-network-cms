@@ -3,7 +3,8 @@ import { TITLE_HINT } from "./missionVision";
 
 /**
  * Founders Journey — singleton (documentId: "foundersJourney").
- * The green timeline section on the About page.
+ * The milestones in the green timeline section on the About page.
+ * Only the milestones are managed here; the section heading lives in the website code.
  */
 export default defineType({
   name: "foundersJourney",
@@ -11,16 +12,6 @@ export default defineType({
   type: "document",
   icon: () => "🧭",
   fields: [
-    defineField({ name: "eyebrow", title: "Overline", type: "string", validation: (Rule) => Rule.required() }),
-    defineField({
-      name: "title",
-      title: "Title",
-      type: "text",
-      rows: 2,
-      description: TITLE_HINT,
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({ name: "description", title: "Intro", type: "text", rows: 3 }),
     defineField({
       name: "milestones",
       title: "Milestones",

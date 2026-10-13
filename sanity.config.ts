@@ -2,6 +2,7 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemaTypes/index";
+import { LIST_DOCUMENTS } from "./schemaTypes/lists";
 
 export default defineConfig({
   name: "global-bridges-network",
@@ -44,13 +45,14 @@ export default defineConfig({
               .icon(() => "🤲")
               .child(S.document().schemaType("supportWays").documentId("supportWays")),
 
-            // Pages
-            S.documentTypeListItem("serviceArea").title("Services"),
-            S.documentTypeListItem("whatWeDo").title("What We Do (About page)"),
-            S.documentTypeListItem("teamMember").title("Founders & Leadership"),
-            S.documentTypeListItem("coreValue").title("Core Values"),
-            S.documentTypeListItem("faq").title("FAQs"),
-            S.documentTypeListItem("goodsItem").title("Goods We Accept / Decline"),
+            // Lists: one document each, items edited and reordered inside it
+            ...LIST_DOCUMENTS.map(({ id, type, title, icon }) =>
+              S.listItem()
+                .title(title)
+                .id(id)
+                .icon(() => icon)
+                .child(S.document().schemaType(type).documentId(id))
+            ),
 
             // Legal pages: two fixed documents of the same type
             S.listItem()
@@ -72,7 +74,7 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
-    // Singletons / fixed documents can't be created from the "+" menu.
-    templates: (templates) => templates.filter(({ schemaType }) => !["contactInfo", "missionVision", "foundersJourney", "impactWays", "supportWays", "legalPage"].includes(schemaType)),
+    // Every document is a fixed one pinned in the menu, so nothing is created from the "+" menu.
+    templates: () => [],
   },
 });
