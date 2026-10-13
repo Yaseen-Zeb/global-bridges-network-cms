@@ -615,6 +615,30 @@ async function seedImpactWays() {
   console.log(`✅ Four Ways (${cards.length} cards)`);
 }
 
+// ─── Supporting Our Work (Donate page) ────────────────────────────────────────
+
+const SUPPORT_CARDS = [
+  ["Volunteer Your\nTime", "Share your time and experience by supporting our programs, community activities, or the people we serve."],
+  ["Provide\nEssential Goods", "Donate essential goods and supplies that can help individuals and families meet everyday needs."],
+  ["Support\nOur Programs", "Make a financial contribution to help sustain our services and expand opportunities for the communities we serve."],
+  ["Share\nYour Skills", "Use your professional knowledge and experience to contribute to our work and strengthen the support we offer."],
+  ["Partner With\nUs", "Work with Global Bridges Network to support our programs, strengthen community partnerships, and create lasting impact."],
+  ["Support Women’s\nEmpowerment", "Help create opportunities that enable women to develop skills, build confidence, and contribute to their communities."],
+];
+
+async function seedSupportWays() {
+  await client.createOrReplace({
+    _id: "supportWays",
+    _type: "supportWays",
+    eyebrow: "Getting Started",
+    title: "Interested in\nSupporting Our Work?",
+    description:
+      "Whether you are an individual looking to mentor a family, a student group seeking community service hours, or a local business wanting to host a supply drive, we welcome your initiative.",
+    cards: SUPPORT_CARDS.map(([title, description], i) => ({ _key: key("card", i), _type: "supportCard", title, description })),
+  });
+  console.log(`✅ Supporting Our Work (${SUPPORT_CARDS.length} cards)`);
+}
+
 // ─── Retired content ──────────────────────────────────────────────────────────
 
 async function removeRetired() {
@@ -636,6 +660,7 @@ const STEPS = {
   missionVision: seedMissionVision,
   foundersJourney: seedFoundersJourney,
   impactWays: seedImpactWays,
+  supportWays: seedSupportWays,
   removeRetired,
 };
 
