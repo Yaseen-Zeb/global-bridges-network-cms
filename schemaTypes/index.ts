@@ -14,6 +14,7 @@ import legalPage from "./legalPage";
 import whatWeDo from "./whatWeDo";
 import missionVision from "./missionVision";
 import foundersJourney from "./foundersJourney";
+import impactWays from "./impactWays";
 
 export const schemaTypes = [
   // Collections
@@ -27,5 +28,6 @@ export const schemaTypes = [
   contactInfo,
   missionVision,
   foundersJourney,
+  impactWays,
   legalPage,
 ];

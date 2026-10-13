@@ -555,6 +555,66 @@ async function seedFoundersJourney() {
   console.log(`✅ Founders Journey (${milestones.length} milestones)`);
 }
 
+// ─── Four Ways (Donate page) ──────────────────────────────────────────────────
+
+const IMPACT_CARDS = [
+  {
+    icon: "volunteer",
+    title: "Volunteer\nYour Time",
+    description:
+      "Share your skills and time as a community mentor, assist with English language practice, or help organize local welcome events.",
+    image: ["/images/donate/way-volunteer.jpg", "A volunteer standing with arms crossed during a forest clean-up"],
+    buttonLabel: "Inquire About Volunteering",
+    buttonAction: "tab",
+    buttonTab: "volunteer",
+  },
+  {
+    icon: "goods",
+    title: "Donate\nEssential Goods",
+    description:
+      "Provide physical necessities such as winter coats, cookware sets, hygiene packages, and school supplies for arriving families.",
+    image: ["/images/donate/way-goods.jpg", "Smiling volunteers handing out water beside aid boxes"],
+    buttonLabel: "View Goods Needed",
+    buttonAction: "link",
+    buttonHref: "#accepted-goods",
+  },
+  {
+    icon: "partner",
+    title: "Partner\nWith Us",
+    description:
+      "Collaborate as a local business, community organization, school, or faith group to host drives or support integration efforts.",
+    image: ["/images/donate/way-partner.jpg", "Two older adults talking warmly over coffee"],
+    buttonLabel: "Explore Partnerships",
+    buttonAction: "link",
+    buttonHref: "/contact",
+  },
+  {
+    icon: "share",
+    title: "Share\nOur Mission",
+    description:
+      "Help raise awareness by sharing our stories, advocating for refugee dignity, and amplifying community voices within your networks.",
+    image: ["/images/donate/way-share.jpg", "Colleagues meeting around a conference table"],
+    buttonLabel: "Spread the Word",
+    buttonAction: "share",
+  },
+];
+
+async function seedImpactWays() {
+  const cards = [];
+  for (const [i, { image: img, ...card }] of IMPACT_CARDS.entries()) {
+    cards.push({ _key: key("card", i), _type: "impactCard", ...card, image: await image(...img) });
+  }
+  await client.createOrReplace({
+    _id: "impactWays",
+    _type: "impactWays",
+    eyebrow: "Practical Support",
+    title: "Four Ways You Can\nMake an Impact",
+    description: "Choose a pathway that aligns with your capacity, skills, and community goals.",
+    cards,
+  });
+  console.log(`✅ Four Ways (${cards.length} cards)`);
+}
+
 // ─── Retired content ──────────────────────────────────────────────────────────
 
 async function removeRetired() {
@@ -575,6 +635,7 @@ const STEPS = {
   legalPages: seedLegalPages,
   missionVision: seedMissionVision,
   foundersJourney: seedFoundersJourney,
+  impactWays: seedImpactWays,
   removeRetired,
 };
 

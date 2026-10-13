@@ -33,6 +33,11 @@ export default defineConfig({
               .id("foundersJourney")
               .icon(() => "🧭")
               .child(S.document().schemaType("foundersJourney").documentId("foundersJourney")),
+            S.listItem()
+              .title("Four Ways (Donate page)")
+              .id("impactWays")
+              .icon(() => "🙌")
+              .child(S.document().schemaType("impactWays").documentId("impactWays")),
 
             // Pages
             S.documentTypeListItem("serviceArea").title("Services"),
@@ -63,6 +68,6 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
     // Singletons / fixed documents can't be created from the "+" menu.
-    templates: (templates) => templates.filter(({ schemaType }) => !["contactInfo", "missionVision", "foundersJourney", "legalPage"].includes(schemaType)),
+    templates: (templates) => templates.filter(({ schemaType }) => !["contactInfo", "missionVision", "foundersJourney", "impactWays", "legalPage"].includes(schemaType)),
   },
 });
