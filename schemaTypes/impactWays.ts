@@ -86,7 +86,7 @@ export default defineType({
                 list: [
                   { title: "Donate Goods", value: "goods" },
                   { title: "Donate Money", value: "money" },
-                  { title: "Volunteer", value: "volunteer" },
+                  { title: "Volunteer (opens the Volunteer page)", value: "volunteer" },
                 ],
                 layout: "radio",
               },

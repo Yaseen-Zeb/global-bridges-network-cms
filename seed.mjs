@@ -97,7 +97,7 @@ const HOME_FAQS = [
     category: "get-involved",
     question: "How can I become a volunteer?",
     answer:
-      "Visit our Donate page and open the Volunteer tab to learn about current volunteer opportunities and share how you would like to help. Our team will follow up with next steps.",
+      "Visit our Volunteer page to learn about current volunteer opportunities and share how you would like to help. Our team will follow up with next steps.",
   },
   {
     category: "donate-goods",
