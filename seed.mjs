@@ -66,7 +66,6 @@ async function seedSiteSettings() {
       inquiryCategories: [
         { label: "General Inquiry", value: "general" },
         { label: "Request for Help", value: "request-help" },
-        { label: "Services Inquiry", value: "services" },
         ...SERVICE_CATEGORIES.map(({ label, value }) => ({ label, value })),
         { label: "Donate Goods", value: "donate-goods" },
         { label: "Volunteer", value: "volunteer" },
@@ -271,7 +270,7 @@ async function seedServiceCategories() {
     value,
   }));
   if (missing.length > 0) {
-    const anchor = existing.find((c) => c.value === "services");
+    const anchor = existing.find((c) => c.value === "request-help");
     await client
       .patch("contactInfo")
       .setIfMissing({ inquiryCategories: [] })

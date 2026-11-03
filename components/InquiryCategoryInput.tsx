@@ -46,7 +46,7 @@ export function InquiryCategoryInput({ value, onChange, elementProps }: StringIn
         onChange(next ? set(next) : unset());
       }}
     >
-      <option value="">Services Inquiry (default)</option>
+      <option value="">First category (default)</option>
       {categories.map((cat) => (
         <option key={cat.value} value={cat.value}>
           {cat.label}
