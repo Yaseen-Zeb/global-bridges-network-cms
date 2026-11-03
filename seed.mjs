@@ -63,6 +63,7 @@ async function seedSiteSettings() {
       phone: "877-829-5500",
       address: "10201 Kings Arm Tavern Ct\nEllicott City, MD 21042",
       volunteerEmail: "volunteer@globalbridgesnetwork.org",
+      taxId: "42-3467751",
       inquiryCategories: [
         { label: "General Inquiry", value: "general" },
         { label: "Request for Help", value: "request-help" },

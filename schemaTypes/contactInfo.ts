@@ -48,6 +48,14 @@ export default defineType({
       validation: (Rule) => Rule.email(),
     }),
     defineField({
+      name: "taxId",
+      title: "Federal Tax ID (EIN)",
+      type: "string",
+      description:
+        'Shown in the footer and under the donation form: "Our federal tax ID (EIN) is …". Format: 12-3456789.',
+      validation: (Rule) => Rule.regex(/^\d{2}-\d{7}$/, { name: "EIN" }).warning("Use the format 12-3456789."),
+    }),
+    defineField({
       name: "donationFormUrl",
       title: "Donation Form URL (Zeffy)",
       type: "url",
