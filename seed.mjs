@@ -202,12 +202,8 @@ const WHAT_WE_DO = [
       "Connecting people with employment and vocational opportunities that support greater independence and self sufficiency.",
   },
   {
-    title: "Resettlement Services",
-    description:
-      "Helping newly arrived individuals and families navigate resettlement and access the resources they need to establish their lives.",
-  },
-  {
     title: "Education & Literacy",
+    cardSize: "wide",
     description:
       "Connecting people with education, skills, and opportunities that support personal growth and long term independence.",
   },
