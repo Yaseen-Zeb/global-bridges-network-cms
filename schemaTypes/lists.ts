@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType, type FieldDefinition, type PreviewConfig } from "sanity";
+import { InquiryCategoryInput } from "../components/InquiryCategoryInput";
 
 /**
  * Website lists. Each list is ONE document (a fixed id pinned in the Studio menu)
@@ -59,6 +60,14 @@ export const servicesList = listDocument({
       defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true }, fields: [altField], validation: (Rule) => Rule.required() }),
       defineField({ name: "linkLabel", title: "Link Label", type: "string", description: 'Shown on the Services page, e.g. "Learn About Education".' }),
       defineField({ name: "linkHref", title: "Link URL", type: "string", description: 'A page path like "/contact" or a full https:// URL.' }),
+      defineField({
+        name: "inquiryCategory",
+        title: "Contact Form Category",
+        type: "string",
+        description: "Preselected in the contact form when this link goes to the Contact page.",
+        components: { input: InquiryCategoryInput },
+        hidden: ({ parent }) => !/^\/contact\/?(#.*)?$/.test((parent as { linkHref?: string } | undefined)?.linkHref ?? ""),
+      }),
     ],
     preview: { select: { title: "title", subtitle: "description", media: "image" } },
   },

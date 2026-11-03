@@ -67,6 +67,7 @@ async function seedSiteSettings() {
         { label: "General Inquiry", value: "general" },
         { label: "Request for Help", value: "request-help" },
         { label: "Services Inquiry", value: "services" },
+        ...SERVICE_CATEGORIES.map(({ label, value }) => ({ label, value })),
         { label: "Donate Goods", value: "donate-goods" },
         { label: "Volunteer", value: "volunteer" },
         { label: "Partnership", value: "partnership" },
@@ -215,6 +216,7 @@ const WHAT_WE_DO = [
 const SERVICES = [
   {
     slug: "education",
+    category: "education",
     title: "Education & Literacy",
     description:
       "We offer practical support, resources, and opportunities that help individuals and families build safe, healthy, and independent lives.",
@@ -223,6 +225,7 @@ const SERVICES = [
   },
   {
     slug: "resettlement",
+    category: "resettlement",
     title: "Resettlement Support",
     description:
       "Practical help for newly arrived refugees and immigrants as they adjust to their new communities and begin rebuilding their lives.",
@@ -231,6 +234,7 @@ const SERVICES = [
   },
   {
     slug: "women",
+    category: "women-empowerment",
     title: "Women Empowerment",
     description: "Resources and opportunities that help women build confidence, develop skills, and become more independent.",
     linkLabel: "Explore Women’s Empowerment",
@@ -238,6 +242,7 @@ const SERVICES = [
   },
   {
     slug: "legal",
+    category: "legal-guidance",
     title: "Legal Guidance",
     description: "Legal support that helps individuals and families understand their options and get through important processes.",
     linkLabel: "Explore Legal Support",
@@ -245,6 +250,50 @@ const SERVICES = [
   },
 ];
 
+
+/** One Inquiry Category per service; `match` finds the service by title. */
+const SERVICE_CATEGORIES = [
+  { label: "Education & Literacy", value: "education", match: /education/i },
+  { label: "Resettlement Support", value: "resettlement", match: /resettlement/i },
+  { label: "Women Empowerment", value: "women-empowerment", match: /women/i },
+  { label: "Legal Guidance", value: "legal-guidance", match: /legal/i },
+  { label: "Health Navigation", value: "health-navigation", match: /health/i },
+  { label: "Employment Readiness", value: "employment-readiness", match: /employment/i },
+];
+
+/**
+ * Patch only: adds the missing per-service Inquiry Categories and links each
+ * service to its category. Everything else in both documents is left as is.
+ */
+async function seedServiceCategories() {
+  const settings = await client.fetch(`*[_id == "contactInfo"][0]{ inquiryCategories[]{ _key, value } }`);
+  const existing = settings?.inquiryCategories ?? [];
+  const missing = SERVICE_CATEGORIES.filter((cat) => !existing.some((c) => c.value === cat.value)).map(({ label, value }) => ({
+    _key: `cat-${value}`,
+    _type: "inquiryCategory",
+    label,
+    value,
+  }));
+  if (missing.length > 0) {
+    const anchor = existing.find((c) => c.value === "services");
+    await client
+      .patch("contactInfo")
+      .setIfMissing({ inquiryCategories: [] })
+      .insert("after", anchor ? `inquiryCategories[_key=="${anchor._key}"]` : "inquiryCategories[-1]", missing)
+      .commit();
+  }
+  console.log(`✅ ${missing.length} inquiry categories added`);
+
+  const services = (await client.fetch(`*[_id == "services"][0].items[]{ _key, title }`)) ?? [];
+  const set = {};
+  for (const svc of services) {
+    const cat = SERVICE_CATEGORIES.find((c) => c.match.test(svc.title ?? ""));
+    if (cat) set[`items[_key=="${svc._key}"].inquiryCategory`] = cat.value;
+    else console.log(`   ⚠️  No category for "${svc.title}"`);
+  }
+  if (Object.keys(set).length > 0) await client.patch("services").set(set).commit();
+  console.log(`✅ ${Object.keys(set).length} services linked to a category`);
+}
 
 async function seedServices() {
   const items = [];
@@ -256,6 +305,7 @@ async function seedServices() {
       description: svc.description,
       linkLabel: svc.linkLabel,
       linkHref: "/contact",
+      inquiryCategory: svc.category,
       image: await image(...svc.image),
     });
   }
@@ -639,6 +689,7 @@ const STEPS = {
   faqs: seedFaqs,
   team: seedTeam,
   services: seedServices,
+  serviceCategories: seedServiceCategories,
   whatWeDo: seedWhatWeDo,
   coreValues: seedCoreValues,
   goods: seedGoods,
