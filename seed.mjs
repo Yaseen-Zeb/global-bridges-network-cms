@@ -336,31 +336,30 @@ const CORE_VALUES = [
     description:
       "People come first, always. We meet everyone with kindness, empathy, and respect, because every journey looks different, and every story deserves to be heard.",
   },
-  // The design only shows Compassion's text; the rest are drafts for the client to confirm.
   {
-    title: "Hope",
+    title: "Dignity",
     description:
-      "We believe every new beginning holds possibility. We help people see a way forward and walk alongside them as they build it.",
+      "Every person deserves to be treated with respect, whatever their background, status, or circumstances. We protect each person's privacy and honour their story.",
   },
   {
     title: "Empowerment",
     description:
-      "We focus on lasting independence, giving people the skills, resources, and confidence to shape their own futures.",
+      "We help people build the skills, confidence, and independence to make their own choices and shape their own futures.",
+  },
+  {
+    title: "Inclusion",
+    description:
+      "We welcome people of every culture, faith, and language, and adapt our support to fit each person's needs.",
   },
   {
     title: "Community",
     description:
-      "No one should face a new start alone. We build connections between neighbours, partners, and cultures so everyone can belong and contribute.",
-  },
-  {
-    title: "Our Promise",
-    description:
-      "We show up with consistency and care, honouring the trust people place in us and following through on every commitment we make.",
+      "No one should start over alone. We connect families with neighbours, partners, and local resources so they can belong and contribute.",
   },
   {
     title: "Integrity",
     description:
-      "We act with honesty, transparency, and accountability in everything we do, and we steward every resource responsibly.",
+      "We act honestly and openly, keep our commitments, and use every donation and resource responsibly.",
   },
 ];
 
