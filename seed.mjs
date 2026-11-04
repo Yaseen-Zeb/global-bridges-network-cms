@@ -113,14 +113,54 @@ const HOME_FAQS = [
   },
 ];
 
+// Shown on the FAQs page only (from the donation form's help tooltips).
+const DONATION_FAQS = [
+  {
+    category: "donations",
+    question: "Is my donation secure?",
+    answer:
+      "Yes, we use industry-standard SSL technology to keep your information secure.\n\nWe partner with Stripe, the industry's established payment processor trusted by some of the world's largest companies.\n\nYour sensitive financial information never touches our servers. We send all data directly to Stripe's PCI-compliant servers through SSL.",
+  },
+  {
+    category: "donations",
+    question: "Is this donation tax-deductible?",
+    answer:
+      "We are an organization eligible to receive tax deductible contributions. Your gift may be tax-deductible to the extent allowed by law. Please consult your tax advisor for guidance applicable to your specific situation.\n\nWe will email you a donation receipt. Please retain it for your records, as it may be required to substantiate your charitable contribution for tax purposes, subject to applicable law.",
+  },
+  {
+    category: "donations",
+    question: "Can I cancel my recurring donation?",
+    answer:
+      "Of course. You always remain in full control of your recurring donation, and you're free to change or cancel it at any time.",
+  },
+];
+
 async function seedFaqs() {
-  // Replaces the whole FAQ list (FAQs page + home page) with the five home page questions.
+  // Replaces the whole FAQ list (FAQs page + home page) with the seeded questions.
+  const items = [
+    ...HOME_FAQS.map((faq) => ({ ...faq, showOnHome: true })),
+    ...DONATION_FAQS.map((faq) => ({ ...faq, showOnHome: false })),
+  ];
   await client.createOrReplace({
     _id: "faqs",
     _type: "faqList",
-    items: HOME_FAQS.map((faq, i) => ({ _key: key("faq", i), _type: "faq", ...faq, showOnHome: true })),
+    items: items.map((faq, i) => ({ _key: key("faq", i), _type: "faq", ...faq })),
   });
-  console.log(`✅ ${HOME_FAQS.length} FAQs`);
+  console.log(`✅ ${items.length} FAQs`);
+}
+
+async function seedDonationFaqs() {
+  // Appends the donation questions that aren't in the list yet; leaves the client's edits alone.
+  const existing = await client.fetch(`*[_id == "faqs"][0].items[].question`);
+  const missing = DONATION_FAQS.filter((faq) => !(existing ?? []).includes(faq.question));
+  if (missing.length > 0) {
+    await client
+      .patch("faqs")
+      .setIfMissing({ items: [] })
+      .append("items", missing.map((faq, i) => ({ _key: `donationFaq${Date.now()}${i}`, _type: "faq", ...faq, showOnHome: false })))
+      .commit();
+  }
+  console.log(`✅ ${missing.length} donation FAQs added`);
 }
 
 // ─── Leadership ───────────────────────────────────────────────────────────────
@@ -682,6 +722,7 @@ async function removeRetired() {
 const STEPS = {
   siteSettings: seedSiteSettings,
   faqs: seedFaqs,
+  donationFaqs: seedDonationFaqs,
   team: seedTeam,
   services: seedServices,
   serviceCategories: seedServiceCategories,
