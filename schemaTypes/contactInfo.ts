@@ -118,7 +118,7 @@ export default defineType({
       name: "inquiryCategories",
       title: "Contact Form — Inquiry Categories",
       type: "array",
-      description: "Options in the Inquiry Category dropdown on the Contact page. The first one is preselected.",
+      description: "Options in the Inquiry Services dropdown on the Contact page. The first one is preselected.",
       of: [
         {
           type: "object",
