@@ -41,6 +41,14 @@ export default defineType({
       validation: (Rule) => Rule.email(),
     }),
     defineField({
+      name: "careersRecipientEmail",
+      title: "Careers Form — Recipient Email",
+      type: "string",
+      description:
+        "Job applications (with the CV attached) are forwarded to this address. Defaults to the primary email if left blank.",
+      validation: (Rule) => Rule.email(),
+    }),
+    defineField({
       name: "volunteerEmail",
       title: "Volunteer Inquiries Email",
       type: "string",

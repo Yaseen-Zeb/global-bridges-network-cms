@@ -208,6 +208,73 @@ export const goodsList = listDocument({
   },
 });
 
+const POSITION_TYPES: Record<string, string> = {
+  "full-time": "Full-time",
+  "part-time": "Part-time",
+  volunteer: "Volunteer",
+};
+
+export const positionsList = listDocument({
+  name: "positionsList",
+  title: "Open Positions (Careers page)",
+  icon: "💼",
+  description:
+    "Jobs on the Careers page. Shown jobs also fill the application form's role dropdown. With none shown, the page says there are no open positions. Drag to reorder.",
+  item: {
+    name: "position",
+    title: "Positions",
+    fields: [
+      defineField({ name: "title", title: "Job Title", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({
+        name: "type",
+        title: "Type",
+        type: "string",
+        options: { list: Object.entries(POSITION_TYPES).map(([value, title]) => ({ title, value })), layout: "radio" },
+        initialValue: "full-time",
+        validation: (Rule) => Rule.required(),
+      }),
+      defineField({ name: "location", title: "Location", type: "string", description: 'E.g. "Ellicott City, MD", "Remote" or "Hybrid".' }),
+      defineField({
+        name: "summary",
+        title: "Short Summary",
+        type: "text",
+        rows: 2,
+        description: "One or two sentences shown on the job card.",
+        validation: (Rule) => Rule.required().max(250),
+      }),
+      defineField({
+        name: "description",
+        title: "Full Description",
+        type: "text",
+        rows: 10,
+        description: "Responsibilities, requirements, etc. Shown when a visitor opens the job. Leave a blank line between paragraphs.",
+      }),
+      defineField({
+        name: "closingDate",
+        title: "Closing Date",
+        type: "date",
+        description: "Optional. The job hides itself automatically after this date.",
+      }),
+      defineField({
+        name: "active",
+        title: "Show on Website",
+        type: "boolean",
+        description: "Turn off to hide this job without deleting it.",
+        initialValue: true,
+      }),
+    ],
+    preview: {
+      select: { title: "title", type: "type", active: "active", closingDate: "closingDate" },
+      prepare: ({ title, type, active, closingDate }) => ({
+        title: title as string,
+        subtitle: [active === false ? "⛔ Hidden" : "✅ Shown", POSITION_TYPES[type as string] ?? type, closingDate ? `closes ${closingDate}` : null]
+          .filter(Boolean)
+          .join(" · "),
+      }),
+    },
+  },
+});
+
 /** Singleton ids, in Studio menu order. */
 export const LIST_DOCUMENTS = [
   { id: "services", type: "servicesList", title: "Services", icon: "🌐" },
@@ -216,4 +283,5 @@ export const LIST_DOCUMENTS = [
   { id: "coreValues", type: "coreValuesList", title: "Core Values", icon: "💎" },
   { id: "faqs", type: "faqList", title: "FAQs", icon: "❓" },
   { id: "goods", type: "goodsList", title: "Goods We Accept / Decline", icon: "📦" },
+  { id: "positions", type: "positionsList", title: "Open Positions (Careers page)", icon: "💼" },
 ] as const;

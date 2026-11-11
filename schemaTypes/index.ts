@@ -10,7 +10,7 @@ import foundersJourney from "./foundersJourney";
 import impactWays from "./impactWays";
 import supportWays from "./supportWays";
 import legalPage from "./legalPage";
-import { coreValuesList, faqList, goodsList, leadershipList, servicesList, whatWeDoList } from "./lists";
+import { coreValuesList, faqList, goodsList, leadershipList, positionsList, servicesList, whatWeDoList } from "./lists";
 
 // Every type is a fixed document pinned in the Studio menu (see sanity.config.ts).
 export const schemaTypes = [
@@ -25,5 +25,6 @@ export const schemaTypes = [
   coreValuesList,
   faqList,
   goodsList,
+  positionsList,
   legalPage,
 ];
